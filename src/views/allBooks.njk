@@ -1,0 +1,66 @@
+{% extends "govuk/template.njk" %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+
+{% block pageTitle %}All Books{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/govuk/govuk-frontend.min.css">
+{% endblock %}
+
+{% block header %}
+    {{ govukHeader({
+        serviceName: "Library Service Centre",
+        serviceUrl: "/"
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <h1 class="govuk-heading-xl">All Books</h1>
+
+    {% if error %}
+        {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: [
+            {
+                text: "Please refresh the page and try again",
+                href: "http://localhost:3000/books#"
+            }
+        ]
+        }) }}
+    {% endif %}
+
+    {% if tableRows and tableRows.length > 0 %}
+        {{ govukTable({
+            caption: "Books and Availability",
+            captionClasses: "govuk-table__caption--m",
+            firstCellIsHeader: true,
+            head: [
+                { text: "Title" },
+                { text: "Author" },
+                { text: "ISBN" },
+                { text: "Publication Year" },
+                { text: "Genre" },
+                { text: "Availability" }
+            ],
+            rows: tableRows
+        }) }}
+    {% else %}
+        <p class="govuk-body">No books available to display.</p>
+    {% endif %}
+
+    {{ govukButton({
+        text: "Home"
+    }) }}
+{% endblock %}
+
+{% block bodyEnd %}
+    <script src="/govuk/govuk-frontend.min.js"></script>
+    <script>
+        window.GOVUKFrontend.initAll();
+    </script>
+{% endblock %}
