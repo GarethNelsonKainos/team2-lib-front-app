@@ -38,6 +38,9 @@ app.get("/books", async (req: Request, res: Response) => {
     // Replace with your actual backend API URL
     const backendUrl = process.env.BACKEND_API_URL || 'http://localhost:8080';
     const apiUrl = `${backendUrl}/books`;
+    const booksEndpoint = process.env.BACKEND_BOOKS_ENDPOINT || '/books';
+    const normalizedBooksEndpoint = booksEndpoint.startsWith('/') ? booksEndpoint : `/${booksEndpoint}`;
+    const apiURL = `${backendUrl}${normalizedBooksEndpoint}`;
     
     console.log(`Attempting to fetch from: ${apiUrl}`);
     
@@ -57,7 +60,7 @@ app.get("/books", async (req: Request, res: Response) => {
       { text: book.title },
       { text: book.author },
       { text: book.isbn },
-      { text: book.publicationYear?.toString() || '' },
+      { text: book.publication_year?.toString() || '' },
       { text: book.genre },
       { text: book.availability || book.status }
     ]);
