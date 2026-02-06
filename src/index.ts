@@ -1,4 +1,5 @@
 import express from "express";
+import 'dotenv/config';
 import { Request, Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -30,6 +31,48 @@ nunjucksEnv.addGlobal("govukRebrand", true);
 
 app.get("/", (req: Request, res: Response) => {
   res.render("test");
+});
+
+app.get("/books", async (req: Request, res: Response) => {
+  try {
+    // Replace with your actual backend API URL
+    const backendUrl = process.env.BACKEND_API_URL || 'http://localhost:8080';
+    const apiUrl = `${backendUrl}/books`;
+    
+    console.log(`Attempting to fetch from: ${apiUrl}`);
+    
+    // Fetch books from your backend API
+    const response = await fetch(apiUrl);
+    
+    console.log(`Backend response status: ${response.status}`);
+    
+    if (!response.ok) {
+      throw new Error(`Backend API responded with status: ${response.status}`);
+    }
+    
+    const books = await response.json();
+    
+    // Transform the data to match the GOV.UK table format
+    const tableRows = books.map((book: any) => [
+      { text: book.title },
+      { text: book.author },
+      { text: book.isbn },
+      { text: book.publicationYear?.toString() || '' },
+      { text: book.genre },
+      { text: book.availability || book.status }
+    ]);
+    
+    // Pass the data to the template
+    res.render("allBooks", { tableRows });
+    
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    // Render with empty data or error message
+    res.render("allBooks", { 
+      tableRows: [],
+      error: 'Unable to fetch books from the backend'
+    });
+  }
 });
 
 app.use(
