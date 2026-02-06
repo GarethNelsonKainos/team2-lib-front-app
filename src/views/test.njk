@@ -1,0 +1,49 @@
+{% extends "govuk/template.njk" %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+
+{% block pageTitle %}GOV.UK components test{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/govuk/govuk-frontend.min.css">
+{% endblock %}
+
+{% block header %}
+    {{ govukHeader({
+        serviceName: "Nunjucks example",
+        serviceUrl: "/"
+    }) }}
+{% endblock %}
+
+{% block beforeContent %}
+    {{ govukPhaseBanner({
+        tag: { text: "Beta" },
+        html: 'This is a prototype page using GOV.UK components.'
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <h1 class="govuk-heading-xl">Test page</h1>
+    <p class="govuk-body">Use this page to confirm GOV.UK Frontend components render correctly.</p>
+
+    {{ govukInput({
+        id: "full-name",
+        name: "fullName",
+        label: { text: "Full name" },
+        hint: { text: "Enter your name as shown on your passport." }
+    }) }}
+
+    {{ govukButton({
+        text: "Continue"
+    }) }}
+{% endblock %}
+
+{% block bodyEnd %}
+    <script src="/govuk/govuk-frontend.min.js"></script>
+    <script>
+        window.GOVUKFrontend.initAll();
+    </script>
+{% endblock %}
